@@ -37,6 +37,7 @@ public class AutoMessages {
             return;
         }
         new BukkitRunnable() {
+            @Override
             public void run() {
                 List<String> autoMessage = getAutoMessage();
                 if (autoMessage == null || autoMessage.isEmpty()) {
