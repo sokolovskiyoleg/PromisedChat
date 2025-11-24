@@ -26,7 +26,7 @@ public class PromisedChatCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             long startTime = System.currentTimeMillis();
             plugin.reloadConfig();
-            plugin.setupConfig();
+            plugin.getPluginConfig().setupConfigs(plugin.getConfig());
             Bukkit.getScheduler().cancelTasks(plugin);
             plugin.getAutoMessageManager().clearData();
             plugin.getAutoMessageManager().startMSG();

@@ -3,7 +3,6 @@ package ru.overwrite.chat;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
@@ -27,7 +26,7 @@ public final class PromisedChat extends JavaPlugin {
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         saveDefaultConfig();
-        setupConfig();
+        pluginConfig.setupConfigs(getConfig());
         ServicesManager servicesManager = getServer().getServicesManager();
         setupChat(servicesManager);
         setupPerms(servicesManager);
@@ -68,15 +67,6 @@ public final class PromisedChat extends JavaPlugin {
     private <T> T getProvider(ServicesManager servicesManager, Class<T> clazz) {
         final RegisteredServiceProvider<T> provider = servicesManager.getRegistration(clazz);
         return provider != null ? provider.getProvider() : null;
-    }
-
-    public void setupConfig() {
-        FileConfiguration config = getConfig();
-        pluginConfig.setupFormats(config);
-        pluginConfig.setupHover(config);
-        pluginConfig.setupCooldown(config);
-        pluginConfig.setupNewbie(config);
-        pluginConfig.setupAutoMessage(config);
     }
 
     @Override

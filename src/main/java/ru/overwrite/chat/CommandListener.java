@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import ru.overwrite.chat.configuration.Config;
+import ru.overwrite.chat.configuration.data.NewbieChatSettings;
 import ru.overwrite.chat.utils.Utils;
 
 public class CommandListener implements Listener {
@@ -17,19 +18,20 @@ public class CommandListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void playerCommand(PlayerCommandPreprocessEvent e) {
-        if (!pluginConfig.newbieChat) {
+        NewbieChatSettings newbieCommands = pluginConfig.getNewbieChatSettings();
+        if (!newbieCommands.enabled()) {
             return;
         }
         Player p = e.getPlayer();
         String command = cutCommand(e.getMessage());
         long time = (System.currentTimeMillis() - p.getFirstPlayed()) / 1000;
-        if (!p.hasPermission("pchat.bypass.newbie") && time <= pluginConfig.newbieCooldown) {
-            for (String cmd : pluginConfig.newbieCommands) {
+        if (!p.hasPermission("pchat.bypass.newbie") && time <= newbieCommands.cooldown()) {
+            for (String cmd : newbieCommands.commands()) {
                 if (!command.equalsIgnoreCase(cmd)) {
                     continue;
                 }
-                String cooldown = Utils.getTime((int) (pluginConfig.newbieCooldown - time), " ч. ", " мин. ", " сек. ");
-                p.sendMessage(pluginConfig.newbieMessage.replace("%time%", cooldown));
+                String cooldown = Utils.getTime((int) (newbieCommands.cooldown() - time), " ч. ", " мин. ", " сек. ");
+                p.sendMessage(newbieCommands.message().replace("%time%", cooldown));
                 e.setCancelled(true);
                 return;
             }

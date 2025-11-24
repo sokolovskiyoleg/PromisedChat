@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.overwrite.chat.configuration.Config;
+import ru.overwrite.chat.configuration.data.AutoMessageSettings;
 import ru.overwrite.chat.utils.Utils;
 
 import java.util.Collections;
@@ -33,7 +34,8 @@ public class AutoMessageManager {
     }
 
     public void startMSG() {
-        if (!pluginConfig.autoMessage) {
+        AutoMessageSettings autoMessageSettings = pluginConfig.getAutoMessageSettings();
+        if (!autoMessageSettings.enabled()) {
             return;
         }
         new BukkitRunnable() {
@@ -52,16 +54,17 @@ public class AutoMessageManager {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 20L, pluginConfig.autoMessageInterval * 20L);
+        }.runTaskTimerAsynchronously(plugin, 20L, autoMessageSettings.messageInterval() * 20L);
     }
 
     private List<String> getAutoMessage() {
-        ObjectList<List<String>> messages = pluginConfig.autoMessages;
+        AutoMessageSettings autoMessageSettings = pluginConfig.getAutoMessageSettings();
+        ObjectList<List<String>> messages = autoMessageSettings.messages();
         if (messages == null || messages.isEmpty()) {
             return Collections.emptyList();
         }
 
-        if (pluginConfig.isRandom) {
+        if (autoMessageSettings.random()) {
             handleRandomRotation(messages);
             return shuffledMessages.get(randomIndex - 1);
         } else {
