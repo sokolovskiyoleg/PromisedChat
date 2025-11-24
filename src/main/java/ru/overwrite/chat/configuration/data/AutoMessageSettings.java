@@ -18,7 +18,7 @@ public record AutoMessageSettings(
         ConfigurationSection autoMessage = config.getConfigurationSection("autoMessage");
 
         if (!autoMessage.getBoolean("enable")) {
-            return new AutoMessageSettings(false, false, 0, List.of());
+            return new AutoMessageSettings(false, false, 0, ObjectList.of());
         }
 
         ConfigurationSection messages = autoMessage.getConfigurationSection("messages");
