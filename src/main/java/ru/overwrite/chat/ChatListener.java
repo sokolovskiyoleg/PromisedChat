@@ -15,8 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import ru.overwrite.chat.configuration.Config;
 import ru.overwrite.chat.utils.ExpiringMap;
 import ru.overwrite.chat.utils.Utils;
@@ -166,17 +164,4 @@ public class ChatListener implements Listener {
         return pluginConfig.perGroupColor.getOrDefault(primaryGroup, "");
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        String name = e.getPlayer().getName();
-        localCooldowns.remove(name);
-        globalCooldowns.remove(name);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onKick(PlayerKickEvent e) {
-        String name = e.getPlayer().getName();
-        localCooldowns.remove(name);
-        globalCooldowns.remove(name);
-    }
 }
