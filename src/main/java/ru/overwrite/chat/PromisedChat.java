@@ -26,9 +26,6 @@ public final class PromisedChat extends JavaPlugin {
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
-        if (!isPaper()) {
-            return;
-        }
         saveDefaultConfig();
         setupConfig();
         ServicesManager servicesManager = getServer().getServicesManager();
@@ -44,22 +41,6 @@ public final class PromisedChat extends JavaPlugin {
         new Metrics(this, 20699);
         long endTime = System.currentTimeMillis();
         getLogger().info("Plugin started in " + (endTime - startTime) + " ms");
-    }
-
-    public boolean isPaper() {
-        if (getServer().getName().equals("CraftBukkit")) {
-            Logger logger = getLogger();
-            logger.info(" ");
-            logger.info("============= ! WARNING ! =============");
-            logger.info("Этот плагин работает только на Paper и его форках!");
-            logger.info("Автор категорически выступает за отказ от использования устаревшего и уязвимого софта!");
-            logger.info("Скачать Paper: https://papermc.io/downloads/all");
-            logger.info("============= ! WARNING ! =============");
-            logger.info(" ");
-            this.setEnabled(false);
-            return false;
-        }
-        return true;
     }
 
     private void setupChat(ServicesManager servicesManager) {
