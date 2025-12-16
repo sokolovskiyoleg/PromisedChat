@@ -33,7 +33,7 @@ public class ChatListener implements Listener {
         this.pluginConfig = plugin.getPluginConfig();
     }
 
-    private final String[] searchList = {"<player>", "<prefix>", "<suffix>", "<dph>"};
+    private final String[] searchList = {"%player%", "%prefix%", "%suffix%", "%dph%"};
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
@@ -142,7 +142,7 @@ public class ChatListener implements Listener {
 
     private String getFormatWithMessage(String format, String chatMessage) {
         return format
-                .replace("<message>", chatMessage)
+                .replace("%message%", chatMessage)
                 .replace("%", "%%"); // Это надо чтобы PAPI не выёбывался
     }
 

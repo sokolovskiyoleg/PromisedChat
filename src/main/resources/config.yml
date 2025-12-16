@@ -1,19 +1,20 @@
 # Форматы чатов (можно создавать свои). Поддерживается PlaceholderAPI
 # Плейсы плагина:
-# <player> - ник игрока
-# <prefix> - префикс игрока (берется из vault api)
-# <suffix> - суффикс игрока (берется из vault api)
-# <dph> - плейсхолдер группы
+# %player% - ник игрока
+# %prefix% - префикс игрока (берется из vault api)
+# %suffix% - суффикс игрока (берется из vault api)
+# %dph% - плейсхолдер группы
+# %message% - сообщение игрока
 chatFormats:
   local:
-    format: "&aⓁ&f <prefix> &8⋆&f <player>&7:<dph> <message>"
+    format: "&aⓁ&f %prefix> &8⋆&f %player%&7:%dph% %message%"
     radius: 100
     # Если префикс указан пустым - канал становится дефолтным
     prefix: ''
     # Кулдаун для чата в милисекундах
     cooldown: 500
   global:
-    format: "&cⒼ&f <prefix> &8⋆&f <player>&7:<dph> <message>"
+    format: "&cⒼ&f %prefix% &8⋆&f %player>&7:%dph% %message%"
     # Будет виден всем игрокам если указано -1
     radius: -1
     # В случае, если будет указан дубликат префикса - к префиксу будет присуждён последний канал с таким префиксом
@@ -27,7 +28,7 @@ chatFormats:
   hoverText:
     enable: false
     format: |-
-      &fИнформация об игроке <player>
+      &fИнформация об игроке %player%
       &fРанг: &6%vault_group%
       &fХП: &6%player_health%
       &fОпыт: &6%player_exp%
