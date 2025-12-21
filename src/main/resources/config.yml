@@ -7,7 +7,7 @@
 # %message% - сообщение игрока
 chatFormats:
   local:
-    format: "&aⓁ&f %prefix> &8⋆&f %player%&7:%dph% %message%"
+    format: "&aⓁ&f %prefix% &8⋆&f %player%&7:%dph% %message%"
     radius: 100
     # Если префикс указан пустым - канал становится дефолтным
     prefix: ''
