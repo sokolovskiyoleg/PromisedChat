@@ -30,7 +30,7 @@ public class CommandListener implements Listener {
                 if (!command.equalsIgnoreCase(cmd)) {
                     continue;
                 }
-                String cooldown = Utils.getTime((int) (newbieCommands.cooldown() - time), " ч. ", " мин. ", " сек. ");
+                String cooldown = Utils.getTime((int) (newbieCommands.cooldown() - time), Config.timeHours, Config.timeMinutes, Config.timeSeconds);
                 p.sendMessage(newbieCommands.message().replace("%time%", cooldown));
                 e.setCancelled(true);
                 return;
