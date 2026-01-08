@@ -2,6 +2,7 @@ package ru.overwrite.chat.configuration.data;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.overwrite.chat.utils.Utils;
@@ -18,7 +19,7 @@ public record AutoMessageSettings(
     public static AutoMessageSettings create(ConfigurationSection autoMessage) {
 
         if (!autoMessage.getBoolean("enable")) {
-            return new AutoMessageSettings(false, false, 0, ObjectList.of());
+            return new AutoMessageSettings(false, false, 0, ObjectLists.emptyList());
         }
 
         // Если вы заебались читать этот кусок кода - я тоже заебался во время работы над ним вспоминая какой лист к чему относится

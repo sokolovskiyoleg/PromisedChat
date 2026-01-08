@@ -62,7 +62,7 @@ public class AutoMessageManager {
         AutoMessageSettings autoMessageSettings = pluginConfig.getAutoMessageSettings();
         ObjectList<ObjectList<BaseComponent[]>> messages = autoMessageSettings.messages();
         if (messages == null || messages.isEmpty()) {
-            return ObjectList.of();
+            return ObjectLists.emptyList();
         }
 
         if (autoMessageSettings.random()) {
