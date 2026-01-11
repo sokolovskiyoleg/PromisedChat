@@ -13,7 +13,8 @@ chatFormats:
     prefix: ''
     # Кулдаун для чата в милисекундах
     cooldown: 500
-    # Право на канал (Если канал дефолтный - право на него не нужно. если не указано - используется формат pchat.channel.имя_из_конфига)
+    # Право на канал, чтобы в него писать и видеть
+    # Если канал дефолтный - право на него не нужно. Если не указано - используется формат pchat.channel.имя_из_конфига
     permission: pchat.channel.local
   global:
     format: "&cⒼ&f %prefix% &8⋆&f %player%&7:%dph% %message%"
@@ -43,6 +44,10 @@ chatFormats:
   donatePlaceholders:
     default: "&7"
     admin: "&f&l"
+  # Приоритет слушателя чата (https://jd.papermc.io/paper/1.21.11/org/bukkit/event/EventPriority.html)
+  chatPriority: LOW
+  # Пересылать ли чаты между серверами в одной сети (Пока доступно только для глобальных чатов)
+  proxy: false
 
 # Настройка блокировки чата для новичков
 newbieChat:

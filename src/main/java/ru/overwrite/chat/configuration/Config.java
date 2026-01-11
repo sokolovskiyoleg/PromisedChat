@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventPriority;
 import ru.overwrite.chat.configuration.data.AutoMessageSettings;
 import ru.overwrite.chat.configuration.data.ChatChannel;
 import ru.overwrite.chat.configuration.data.NewbieChatSettings;
@@ -17,6 +18,9 @@ public class Config {
 
     private final Char2ObjectMap<ChatChannel> prefixMap = new Char2ObjectOpenHashMap<>();
     private ChatChannel defaultChannel;
+
+    private EventPriority chatPriority;
+    private boolean proxy;
 
     private NewbieChatSettings newbieChatSettings;
     private AutoMessageSettings autoMessageSettings;
@@ -36,6 +40,9 @@ public class Config {
     }
 
     private void setupChatFormats(ConfigurationSection chatFormats) {
+
+        chatPriority = EventPriority.valueOf(chatFormats.getString("chatPriority", "LOW"));
+        proxy = chatFormats.getBoolean("proxy", false);
 
         prefixMap.clear();
 
