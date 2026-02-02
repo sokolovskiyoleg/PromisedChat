@@ -53,11 +53,16 @@ public class Config {
         String globalCooldownMessage = Utils.colorize(chatFormats.getString("cooldownMessage", ""));
 
         for (String key : chatFormats.getKeys(false)) {
-            if (key.equals("hoverText") || key.equals("donatePlaceholders") || key.equals("cooldownMessage")) {
+            if (key.equals("hoverText") || key.equals("donatePlaceholders") || key.equals("cooldownMessage") || !chatFormats.isConfigurationSection(key)) {
                 continue;
             }
 
             ConfigurationSection section = chatFormats.getConfigurationSection(key);
+            String format = section.getString("format");
+            if (format == null) {
+                continue;
+            }
+            int radius = section.getInt("radius", -1);
             String prefixStr = section.getString("prefix", "");
             char prefixChar = prefixStr.isEmpty() ? '\0' : prefixStr.charAt(0);
 
@@ -77,8 +82,8 @@ public class Config {
 
             ChatChannel channel = new ChatChannel(
                     key,
-                    section.getString("format"),
-                    section.getInt("radius", -1),
+                    format,
+                    radius,
                     prefixChar,
                     channelCooldownSettings,
                     channelHover,
