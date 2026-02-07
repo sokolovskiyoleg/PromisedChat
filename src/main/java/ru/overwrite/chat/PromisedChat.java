@@ -1,5 +1,6 @@
 package ru.overwrite.chat;
 
+import github.scarsz.discordsrv.DiscordSRV;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -18,6 +19,8 @@ public final class PromisedChat extends JavaPlugin {
 
     private Permission perms;
 
+    private DiscordSRV discordSrv;
+
     private final Config pluginConfig = new Config();
     private final ChatManager chatManager = new ChatManager(this);
     private final AutoMessageManager autoMessageManager = new AutoMessageManager(this);
@@ -32,6 +35,7 @@ public final class PromisedChat extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         setupPerms(servicesManager, pluginManager);
         setupPlaceholders(pluginManager);
+        setupDiscordSrv(pluginManager);
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new CommandListener(this), this);
         autoMessageManager.startMSG();
@@ -67,6 +71,14 @@ public final class PromisedChat extends JavaPlugin {
         }
         Utils.USE_PAPI = true;
         getLogger().info("Плейсхолдеры подключены!");
+    }
+
+    private void setupDiscordSrv(PluginManager pluginManager) {
+        if (!pluginManager.isPluginEnabled("DiscordSRV")) {
+            return;
+        }
+        discordSrv = DiscordSRV.getPlugin();
+        getLogger().info("Интеграция с DiscordSRV подключена!");
     }
 
     private <T> T getProvider(ServicesManager servicesManager, Class<T> clazz) {

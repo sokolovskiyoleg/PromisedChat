@@ -61,6 +61,8 @@ public class ChatManager {
             return;
         }
 
+        e.setCancelled(true);
+
         String donatePlaceholder = plugin.getPerms() != null ? getDonatePlaceholder(p, channel) : "";
         String prefix = plugin.getChat() != null ? plugin.getChat().getPlayerPrefix(p) : "";
         String suffix = plugin.getChat() != null ? plugin.getChat().getPlayerSuffix(p) : "";
@@ -71,20 +73,25 @@ public class ChatManager {
 
         String chatFormat = Utils.colorize(Utils.replacePlaceholders(p, Utils.replaceEach(channel.format(), searchList, replacementList)));
 
-        e.getRecipients().clear();
+        String formatWithMessage = getFormatWithMessage(chatFormat, colorizedMessage);
 
         ObjectList<Player> playersInRadius = getRadius(p, channel);
 
-        String formatWithMessage = getFormatWithMessage(chatFormat, colorizedMessage);
-
-        if (sendHover(p, replacementList, playersInRadius, formatWithMessage, channel)) {
-            e.setCancelled(true);
-            return;
+        // Ну е*ать, костыль на костыле, но игроки хотят е*учий дискорд ЭсЭрВи...
+        // Да простят меня все
+        // Научите меня писать нормальный код
+        if (!sendHover(p, replacementList, playersInRadius, formatWithMessage, channel)) {
+            for (Player recipient : playersInRadius) {
+                recipient.sendMessage(formatWithMessage);
+            }
+            Bukkit.getConsoleSender().sendMessage(formatWithMessage);
+            if (pluginMessage != null && channel.radius() < 0) {
+                pluginMessage.sendCrossProxy(p, formatWithMessage, channel.permission(), false);
+            }
         }
-        e.getRecipients().addAll(playersInRadius);
-        e.setFormat(formatWithMessage);
-        if (pluginMessage != null && channel.radius() < 0) {
-            pluginMessage.sendCrossProxy(p, formatWithMessage, channel.permission(), false);
+
+        if (plugin.getDiscordSrv() != null && channel.radius() < 0) {
+            plugin.getDiscordSrv().processChatMessage(p, message, null, false);
         }
     }
 
