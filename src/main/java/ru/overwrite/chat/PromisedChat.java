@@ -26,7 +26,7 @@ public final class PromisedChat extends JavaPlugin {
     private final ChatManager chatManager = new ChatManager(this);
     private final AutoMessageManager autoMessageManager = new AutoMessageManager(this);
 
-    private final DiscordMessageListener discordMessageListener = new DiscordMessageListener(getPluginConfig());
+    private DiscordMessageListener discordMessageListener;
 
     @Override
     public void onEnable() {
@@ -80,8 +80,7 @@ public final class PromisedChat extends JavaPlugin {
         if (!pluginManager.isPluginEnabled("DiscordSRV")) {
             return;
         }
-        DiscordSRV.api.subscribe(discordMessageListener);
-        Utils.USE_DSRV = true;
+        this.discordMessageListener = new DiscordMessageListener(pluginConfig);
         getLogger().info("DiscordSRV подключен!");
     }
 
@@ -93,8 +92,8 @@ public final class PromisedChat extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-        if (Utils.USE_DSRV) {
-            DiscordSRV.api.unsubscribe(discordMessageListener);
+        if (this.discordMessageListener != null) {
+            this.discordMessageListener.unsubscribe();
         }
     }
 }
