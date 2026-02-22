@@ -12,6 +12,7 @@ public class DiscordMessageListener {
 
     public DiscordMessageListener(Config config) {
         this.config = config;
+        this.subscribe();
     }
 
     @Subscribe
