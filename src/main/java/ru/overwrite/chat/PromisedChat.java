@@ -38,7 +38,7 @@ public final class PromisedChat extends JavaPlugin {
         setupPerms(servicesManager, pluginManager);
         setupPlaceholders(pluginManager);
         setupDiscordSRV(pluginManager);
-        pluginManager.registerEvents(new ChatListener(this), this);
+        chatManager.register();
         pluginManager.registerEvents(new CommandListener(this), this);
         autoMessageManager.startMSG();
         getCommand("promisedchat").setExecutor(new PromisedChatCommand(this));

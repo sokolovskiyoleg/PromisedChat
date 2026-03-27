@@ -12,7 +12,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.messaging.Messenger;
 import ru.overwrite.chat.configuration.Config;
 import ru.overwrite.chat.configuration.data.ChatChannel;
@@ -25,6 +30,7 @@ public class ChatManager {
     private final Config pluginConfig;
     private final String[] searchList = {"%player%", "%prefix%", "%suffix%", "%dph%"};
     private PluginMessage pluginMessage;
+    private Listener registeredListener;
 
     public ChatManager(PromisedChat plugin) {
         this.plugin = plugin;
@@ -39,6 +45,51 @@ public class ChatManager {
             pluginMessage = new PluginMessage(plugin);
             messenger.registerIncomingPluginChannel(plugin, "BungeeCord", pluginMessage);
         }
+    }
+
+    public void register() {
+        unregister();
+
+        EventPriority priority = pluginConfig.getChatPriority();
+        Listener listener = new Listener() {
+        };
+        EventExecutor executor = (ignored, event) -> {
+            if (!(event instanceof AsyncPlayerChatEvent chatEvent)) {
+                return;
+            }
+            process(chatEvent);
+        };
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvent(
+                AsyncPlayerChatEvent.class,
+                listener,
+                priority,
+                executor,
+                plugin,
+                true
+        );
+
+        this.registeredListener = listener;
+    }
+
+    public void unregister() {
+        if (registeredListener != null) {
+            HandlerList.unregisterAll(registeredListener);
+            registeredListener = null;
+        }
+    }
+
+    private void process(AsyncPlayerChatEvent e) {
+        Player p = e.getPlayer();
+
+        if (checkNewbie(p, e)) {
+            return;
+        }
+
+        String rawMessage = e.getMessage();
+
+        processChat(p, rawMessage, e);
     }
 
     public void processChat(Player p, String rawMessage, AsyncPlayerChatEvent e) {

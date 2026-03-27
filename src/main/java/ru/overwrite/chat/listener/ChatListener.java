@@ -1,73 +1,61 @@
 package ru.overwrite.chat.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.PluginManager;
 import ru.overwrite.chat.ChatManager;
 import ru.overwrite.chat.PromisedChat;
 import ru.overwrite.chat.configuration.Config;
 
-public class ChatListener implements Listener {
+public class ChatListener {
 
+    private final PromisedChat plugin;
     private final ChatManager chatManager;
     private final Config pluginConfig;
+    private Listener registeredListener;
 
     public ChatListener(PromisedChat plugin) {
-        this.chatManager = plugin.getChatManager();
+        this.plugin = plugin;
+        this.chatManager = new ChatManager(plugin);
         this.pluginConfig = plugin.getPluginConfig();
     }
 
-    // А в пизду захуячим 6 листенеров нахуй
-    // Не ну а хуле делать
+    public void register() {
+        unregister();
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onChatLowest(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.LOWEST) {
-            return;
-        }
-        process(e);
+        EventPriority priority = pluginConfig.getChatPriority();
+        Listener listener = new Listener() {
+        };
+        EventExecutor executor = (ignored, event) -> {
+            if (!(event instanceof AsyncPlayerChatEvent chatEvent)) {
+                return;
+            }
+            process(chatEvent);
+        };
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvent(
+                AsyncPlayerChatEvent.class,
+                listener,
+                priority,
+                executor,
+                plugin,
+                true
+        );
+
+        this.registeredListener = listener;
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onChatLow(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.LOW) {
-            return;
+    public void unregister() {
+        if (registeredListener != null) {
+            HandlerList.unregisterAll(registeredListener);
+            registeredListener = null;
         }
-        process(e);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onChatNormal(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.NORMAL) {
-            return;
-        }
-        process(e);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onChatHigh(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.HIGH) {
-            return;
-        }
-        process(e);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onChatHighest(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.HIGHEST) {
-            return;
-        }
-        process(e);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onChatMonitor(AsyncPlayerChatEvent e) {
-        if (pluginConfig.getChatPriority() != EventPriority.MONITOR) {
-            return;
-        }
-        process(e);
     }
 
     private void process(AsyncPlayerChatEvent e) {

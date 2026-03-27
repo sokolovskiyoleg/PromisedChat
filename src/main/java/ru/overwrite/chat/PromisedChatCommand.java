@@ -33,6 +33,7 @@ public class PromisedChatCommand implements TabExecutor {
             Bukkit.getScheduler().cancelTasks(plugin);
             plugin.getAutoMessageManager().clearData();
             plugin.getAutoMessageManager().startMSG();
+            plugin.getChatManager().register();
             long endTime = System.currentTimeMillis();
             sender.sendMessage("§5§lPromisedChat §7> §aКонфигурация перезагружена за §e" + (endTime - startTime) + " ms");
             return true;
